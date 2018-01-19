@@ -1,12 +1,18 @@
 package com.intern.authentication.dto;
 
 
+import com.intern.authentication.config.PasswordEncrypt;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class UserDTO {
     private String userId;
     private String firstName;
     private String lastName;
     private String userName;
     private String password;
+
+    @Autowired
+    PasswordEncrypt passwordencrypt;
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package com.intern.authentication.services.impl;
 
+import com.intern.authentication.config.PasswordEncrypt;
 import com.intern.authentication.services.AuthenticationService;
 import com.intern.authentication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +12,27 @@ public class AuthenticationServiceimpl implements AuthenticationService{
     @Autowired
     UserService userservice;
 
+    @Autowired
+    PasswordEncrypt encryptedpassword;
+
     @Override
     public String login(String username,String password){
-        String userid = userservice.getuserbyname(username);
-        if(userservice.checkifuserexists(userid) && userservice.getuserDetails(userid).getPassword().equals(password))
-        {
-            return userid;
+        try{
+            String userid = userservice.getuserbyname(username);
+            if(encryptedpassword.checkPassword(password,userservice.getuserDetails(userid).getPassword()))
+            {
+                return userid;
+            }
+            else
+            {
+                return "null";
+            }
         }
-        else
+        catch (Exception e)
         {
-            return "null";
+            System.out.println(e);
+            return null;
         }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.intern.authentication.services.impl;
 
+import com.intern.authentication.config.PasswordEncrypt;
 import com.intern.authentication.entity.User;
 import com.intern.authentication.repository.UserRepository;
 import com.intern.authentication.services.UserService;
@@ -8,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true,propagation = Propagation.REQUIRES_NEW)
 public class UserServiceimpl implements UserService {
@@ -17,9 +16,14 @@ public class UserServiceimpl implements UserService {
     @Autowired
     UserRepository userrepository;
 
+    @Autowired
+    PasswordEncrypt passwordEncrypt;
+
+
     @Override
     @Transactional(readOnly = false)
     public User save(User user){
+        user.setPassword(passwordEncrypt.hashPassword(user.getPassword()));
         return userrepository.save(user);
     }
 
